@@ -1,0 +1,6 @@
+PG_USER = 'admin'
+PG_PASSWORD = 'admin1pwd'
+PG_HOST = 'db'
+PG_DB = 'swapi'
+PG_DSN = f'postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:5432/{PG_DB}'
+PG_DSN_ALC = f'postgresql+asyncpg://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:5432/{PG_DB}'

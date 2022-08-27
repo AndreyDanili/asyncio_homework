@@ -1,0 +1,39 @@
+version: "3.1"
+
+networks:
+  my_network:
+
+volumes:
+  postgres_data:
+
+services:
+  db:
+    image: postgres:13.4-alpine3.14
+    environment:
+      POSTGRES_PASSWORD: admin1pwd
+      POSTGRES_USER: admin
+      POSTGRES_DB: swapi
+    ports:
+      - "5433:5432"
+    networks:
+      - my_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin1 admin1pwd -d swapi" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data/
+
+  api:
+    build: .
+    depends_on:
+      - db
+    working_dir: /src
+    command: >
+      sh -c "python /src/migration_bd.py &&
+            python /src/swapi.py"
+    networks:
+      - my_network
